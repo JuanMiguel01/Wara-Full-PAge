@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chispa Cubana — La App de Citas de Wara Media</title>
+
+  <meta name="description" content="Chispa Cubana: la app de citas que conecta a cubanos en todo el mundo. Creada por Wara Media. Regístrate para el acceso anticipado y encuentra tu chispa." />
+  <meta property="og:title" content="Chispa Cubana — La App de Citas de Wara Media" />
+  <meta property="og:description" content="La chispa que buscas, a un clic de distancia. Únete a la lista de espera de la nueva app de citas para cubanos." />
+  <meta property="og:image" content="https://i.imgur.com/uJgD3r7.png" />
+  <meta property="og:url" content="wara-citas.vercel.app" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" href="https://yt3.googleusercontent.com/-xjgZXaiuPVZ22Sq8qd05QDgLmVmcvUJjMH71G1ZLG1Y3_fvmQLkh_E0bRAPGDGT7ppb2CmsMkc=s120-c-k-c0x00ffffff-no-rj" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{
+      --bg-dark: #0A0A0A;
+      --card-dark: #111111;
+      --border-dark: rgba(255,255,255,0.07);
+      --text-muted: #94a3b8;
+      --brand-primary: #FF6B6B;
+      --brand-secondary: #FFD166;
+    }
+    html{ scroll-behavior: smooth; }
+    body{
+      font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color:#fff;
+      background-color:var(--bg-dark);
+      background-image:
+        radial-gradient(circle at 10% 10%, rgba(255,107,107,0.1) 0%, transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(255,209,102,0.1) 0%, transparent 30%);
+    }
+    .gradient-text{
+      background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    @media (max-width: 768px) {
+  header {
+    height: 60px;
+  }
+  header .h-20 {
+    height: 60px !important; 
+  }
+}
+
+    
+header {
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+header.hide {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+    .glass-effect{
+      background: rgba(17,17,17,0.5);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-dark);
+    }
+    .btn-primary{
+      background: linear-gradient(90deg, var(--brand-primary), #ff8a8a);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255,107,107,0.2);
+    }
+    .btn-primary:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255,107,107,0.3);
+    }
+    
+    /* ---- NUEVOS ESTILOS ---- */
+
+    /* Estilo del header al hacer scroll */
+    #main-header.header-scrolled {
+      background: rgba(10, 10, 10, 0.7); /* Fondo más sólido */
+      border-bottom-width: 1px;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    #main-header {
+        transition: background-color 0.3s ease-out, border-color 0.3s ease-out;
+    }
+    
+    /* Animaciones al hacer scroll */
+    [data-animate] {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    [data-animate].is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* Estilo para la barra de scroll del carrusel */
+    .custom-scrollbar::-webkit-scrollbar {
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.05);
+      border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.2);
+      border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    
+    #mobile-menu{
+      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    }
+    .text-brand-primary{ color: var(--brand-primary); }
+  </style>
+</head>
+<body class="antialiased leading-relaxed">
+  <header id="main-header" class="sticky top-0 z-50 glass-effect">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <a href="#" class="flex items-center gap-3" aria-label="Chispa Cubana - Inicio">
+          <img src="https://yt3.googleusercontent.com/-xjgZXaiuPVZ22Sq8qd05QDgLmVmcvUJjMH71G1ZLG1Y3_fvmQLkh_E0bRAPGDGT7ppb2CmsMkc=s120-c-k-c0x00ffffff-no-rj" alt="Wara Media / Chispa Cubana Logo" class="w-12 h-12 rounded-xl object-cover" />
+          <div>
+            <div class="text-lg font-bold text-white">Chispa Cubana</div>
+            <div class="text-xs text-gray-400 -mt-1">por Wara Media</div>
+          </div>
+        </a>
+
+        <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-gray-300" aria-label="Navegación principal">
+          <a href="#features" class="hover:text-white transition-colors">Funciones</a>
+          <a href="#how-it-works" class="hover:text-white transition-colors">Cómo Funciona</a>
+          <a href="#youtube" class="hover:text-white transition-colors">Nuestro Show</a>
+        </nav>
+
+        <div class="flex items-center gap-3">
+          <a href="#signup" class="btn-primary px-5 py-2.5 rounded-full font-bold text-white text-sm shadow-lg hidden sm:flex active:scale-95">Regístrate Gratis</a>
+          <button id="open-menu-btn" class="md:hidden p-2 rounded-md text-gray-300 hover:bg-white/10 focus:outline-none" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="mobile-menu" class="md:hidden opacity-0 pointer-events-none transform -translate-y-4 bg-black/80 border-t border-white/5">
+      <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-3">
+        <a href="#features" class="mobile-menu-link block px-3 py-2 rounded text-white/90 hover:bg-white/5">Funciones</a>
+        <a href="#how-it-works" class="mobile-menu-link block px-3 py-2 rounded text-white/90 hover:bg-white/5">Cómo Funciona</a>
+        <a href="#youtube" class="mobile-menu-link block px-3 py-2 rounded text-white/90 hover:bg-white/5">Nuestro Show</a>
+        <a href="#signup" class="mobile-menu-link block mt-2 px-3 py-3 rounded-full text-center btn-primary text-white font-semibold">Regístrate Gratis</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="relative text-center px-4 py-16 sm:py-20 md:py-32 overflow-hidden">
+      <div class="max-w-4xl mx-auto">
+        <h1 data-animate class="text-3xl sm:text-4xl md:text-6xl font-extrabold leading-tight tracking-tighter">
+          La <span class="gradient-text">chispa</span> que buscas, a un clic de distancia.
+        </h1>
+        <p data-animate style="transition-delay: 0.2s;" class="mt-6 text-base sm:text-lg text-gray-400 max-w-2xl mx-auto">
+          La app de citas que conecta a cubanos dentro y fuera de la isla. Creada por tu show favorito, Wara Media. Únete a la beta y sé el primero en encontrar tu match.
+        </p>
+        <div data-animate style="transition-delay: 0.4s;" class="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <a href="#signup" class="w-full sm:w-auto btn-primary px-8 py-4 rounded-full font-bold text-white shadow-lg active:scale-95 transform transition-transform">Quiero Acceso Anticipado</a>
+          <a href="#youtube" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-semibold border border-gray-700 hover:bg-white/5 transition-colors active:scale-95 transform">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+            Ver el Show
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div data-animate class="text-center">
+          <h2 class="text-3xl font-bold">Hecho por y para cubanos</h2>
+          <p class="mt-3 text-gray-400 max-w-xl mx-auto">Funciones pensadas para nuestra gente, donde quiera que esté.</p>
+        </div>
+
+        <div data-animate style="transition-delay: 0.2s;" class="mt-12 flex gap-6 md:gap-8 overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-3 custom-scrollbar pb-4 md:pb-0">
+          <article class="flex-shrink-0 w-[85%] sm:w-[45%] md:w-auto snap-start glass-effect p-8 rounded-2xl text-center">
+            <div class="text-5xl mb-4">🛡️</div>
+            <h3 class="font-bold text-lg text-white">Perfiles Verificados</h3>
+            <p class="mt-2 text-gray-300 text-sm">Priorizamos tu seguridad. Verificación con selfie y revisión manual para evitar perfiles falsos y estafas.</p>
+          </article>
+
+          <article class="flex-shrink-0 w-[85%] sm:w-[45%] md:w-auto snap-start glass-effect p-8 rounded-2xl text-center">
+            <div class="text-5xl mb-4">🌶️</div>
+            <h3 class="font-bold text-lg text-white">Rompehielos con Sabor</h3>
+            <p class="mt-2 text-gray-300 text-sm">¿No sabes qué decir? Usa nuestros "rompehielos" con frases y preguntas cubanas para empezar a conversar.</p>
+          </article>
+
+          <article class="flex-shrink-0 w-[85%] sm:w-[45%] md:w-auto snap-start glass-effect p-8 rounded-2xl text-center">
+            <div class="text-5xl mb-4">📍</div>
+            <h3 class="font-bold text-lg text-white">Filtros que Conectan</h3>
+            <p class="mt-2 text-gray-300 text-sm">Busca por provincia, ciudad actual o intereses. Encuentra gente cerca de ti o del otro lado del mundo.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="how-it-works" class="py-16">
+       <div class="max-w-4xl mx-auto px-4">
+        <div data-animate class="text-center">
+          <h2 class="text-3xl font-bold">Encuentra tu Chispa en 3 Pasos</h2>
+        </div>
+        
+        <div data-animate style="transition-delay: 0.2s;" class="mt-12 flex gap-8 md:gap-8 overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-3 custom-scrollbar pb-4 md:pb-0 text-center">
+          <div class="flex-shrink-0 w-[85%] sm:w-[60%] md:w-auto snap-start flex flex-col items-center px-4">
+            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-white/10 border border-white/10 text-xl font-bold gradient-text">1</div>
+            <h4 class="font-semibold mt-4 text-white">Crea tu Perfil</h4>
+            <p class="text-gray-400 text-sm mt-1">Sube tus mejores fotos, cuenta un poco sobre ti y verifica tu cuenta. ¡Fácil y rápido!</p>
+          </div>
+
+          <div class="flex-shrink-0 w-[85%] sm:w-[60%] md:w-auto snap-start flex flex-col items-center px-4">
+            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-white/10 border border-white/10 text-xl font-bold gradient-text">2</div>
+            <h4 class="font-semibold mt-4 text-white">Descubre y Desliza</h4>
+            <p class="text-gray-400 text-sm mt-1">Explora perfiles interesantes. Desliza a la derecha si te gusta, a la izquierda si no.</p>
+          </div>
+
+          <div class="flex-shrink-0 w-[85%] sm:w-[60%] md:w-auto snap-start flex flex-col items-center px-4">
+            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-white/10 border border-white/10 text-xl font-bold gradient-text">3</div>
+            <h4 class="font-semibold mt-4 text-white">Haz Match y Chatea</h4>
+            <p class="text-gray-400 text-sm mt-1">Si ambos se gustan, ¡es un match! Empieza a chatear y planeen su primera cita.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="youtube" class="max-w-4xl mx-auto px-4 py-16">
+      <div data-animate class="text-center">
+        <h2 class="text-2xl sm:text-3xl font-bold">MEJOR AMIGA elige su CITA entre 20 HOMBRES ❤️</h2>
+        <p class="text-center text-gray-400 mt-3">La idea nació de las historias y conexiones que creamos en Wara Media.</p>
+      </div>
+
+      <div data-animate style="transition-delay: 0.2s;" class="mt-8 aspect-video rounded-xl overflow-hidden shadow-2xl shadow-red-500/10 glass-effect">
+        <iframe class="w-full h-full" loading="lazy" src="https://www.youtube.com/embed/rFB_6i8cfrM" title="MEJOR AMIGA elige su CITA entre 20 HOMBRES ❤️" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </div>
+
+      <div data-animate style="transition-delay: 0.3s;" class="mt-8 text-center">
+        <a href="https://www.youtube.com/@WuaraMedia" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 transition-colors px-6 py-3 rounded-full font-bold text-white active:scale-95 transform">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+          Visita Nuestro Canal en YouTube
+        </a>
+      </div>
+    </section>
+
+    <section id="signup" class="px-4 py-16">
+      <div data-animate class="max-w-2xl mx-auto glass-effect p-6 sm:p-8 md:p-12 rounded-2xl text-center shadow-lg">
+        <h3 class="text-2xl font-bold text-white">Únete a la Lista de Espera</h3>
+        <p id="signup-subtext" class="text-gray-300 mt-3">Regístrate ahora y serás el primero en saber cuándo lanzamos la beta. ¡Recibirás beneficios exclusivos!</p>
+
+        <form id="prelaunch-form" class="mt-6 flex flex-col sm:flex-row gap-3" aria-label="Formulario de suscripción">
+          <label for="email" class="sr-only">Correo electrónico</label>
+          <input id="email" name="email" type="email" required placeholder="tu.correo@email.com" class="flex-1 px-4 py-3 rounded-full bg-gray-900 border border-gray-700 text-white focus:ring-2 focus:ring-brand-primary focus:outline-none transition" />
+          <button type="submit" id="submit-btn" class="btn-primary px-6 py-3 rounded-full font-semibold flex items-center justify-center gap-2 active:scale-95 transform transition-transform">
+            <span id="submit-btn-text">Solicitar Acceso</span>
+            <svg id="submit-spinner" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+          </button>
+        </form>
+
+        <p id="form-message" class="mt-4 text-sm text-gray-400 h-5" aria-live="polite"></p>
+        <p class="text-xs text-gray-500 mt-3">Al suscribirte aceptas nuestra <a href="#privacy" class="underline hover:text-white modal-trigger">Política de Privacidad</a>. Cero spam, prometido.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-white/10 mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row justify-center md:justify-between items-center gap-6 text-sm text-gray-400">
+      <p class="text-center md:text-left">© <span id="year"></span> Chispa Cubana & Wara Media. Todos los derechos reservados.</p>
+      <div class="flex gap-6">
+        <a href="#privacy" class="hover:text-white transition-colors modal-trigger">Privacidad</a>
+        <a href="#terms" class="hover:text-white transition-colors modal-trigger">Términos</a>
+        <a href="#contact" class="hover:text-white transition-colors modal-trigger">Contacto</a>
+      </div>
+    </div>
+  </footer>
+
+  <div id="modal-container" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 opacity-0 pointer-events-none transition-opacity duration-300" aria-hidden="true"><div id="modal-dialog" class="glass-effect rounded-2xl p-6 md:p-8 w-full max-w-2xl shadow-2xl relative transform scale-95 transition-transform duration-300"><button id="close-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors" aria-label="Cerrar modal"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button><div id="modal-content" class="text-gray-300 pr-8 max-h-[80vh] overflow-y-auto custom-scrollbar"></div></div></div><div id="modal-templates" class="hidden"><div data-modal="privacy"><h3 class="text-xl font-bold text-white">Política de Privacidad</h3><p class="mt-4"><strong>TEXTO DE EJEMPLO:</strong> Entendemos que tu privacidad es crucial. Esta sección debe detallar qué datos recopilamos (email, fotos, ubicación, etc.), cómo los usamos para mejorar tu experiencia y encontrar matches, y con quién podríamos compartirlos. Es vital ser transparente sobre la seguridad de los datos. <strong>Reemplaza este texto con tu política de privacidad real, consultada con un profesional legal.</strong></p></div><div data-modal="terms"><h3 class="text-xl font-bold text-white">Términos y Condiciones</h3><p class="mt-4"><strong>TEXTO DE EJEMPLO:</strong> Aquí debes establecer las reglas del juego. Define la edad mínima para usar la app (usualmente 18+), las normas de comportamiento (prohibir acoso, perfiles falsos), las consecuencias de violar las reglas y limitar tu responsabilidad. <strong>Este es un documento legal importante; consulta a un abogado para redactarlo.</strong></p></div><div data-modal="contact"><h3 class="text-xl font-bold text-white">Contacto</h3><p class="mt-4">¿Preguntas, sugerencias o colaboraciones?</p><p class="mt-2"><strong>Email:</strong> <a href="mailto:contacto@waramedia.com" class="text-brand-primary hover:underline">contacto@waramedia.com</a></p><p class="mt-2"><strong>Instagram:</strong> <a href="https://www.instagram.com/waramedia" target="_blank" rel="noopener" class="text-brand-primary hover:underline">@waramedia</a></p></div></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZKuh7HBM2VwoTvUGsKCZN6-xhVxGWJcE",
+      authDomain: "wara-citas-vend.firebaseapp.com",
+      projectId: "wara-citas-vend",
+      storageBucket: "wara-citas-vend.firebasestorage.app",
+      messagingSenderId: "175393570165",
+      appId: "1:175393570165:web:78085a4866d703a7dae73c",
+      measurementId: "G-KN4H9N7BPL"
+    };
+    
+    let db = null;
+    if (firebaseConfig && firebaseConfig.apiKey !== "AIza..."){
+      try {
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+      } catch (err) { console.error("Error inicializando Firebase:", err); }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // --- LÓGICA NUEVA: Header dinámico ---
+      const header = document.getElementById('main-header');
+      if (header) {
+        window.addEventListener('scroll', () => {
+          header.classList.toggle('header-scrolled', window.scrollY > 10);
+        });
+      }
+
+      // --- LÓGICA NUEVA: Animaciones al hacer scroll ---
+      const animatedElements = document.querySelectorAll('[data-animate]');
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1 });
+
+        animatedElements.forEach(el => observer.observe(el));
+      } else {
+        // Fallback para navegadores antiguos sin IntersectionObserver
+        animatedElements.forEach(el => el.classList.add('is-visible'));
+      }
+
+      // --- Menú móvil (sin cambios) ---
+      const openMenuBtn = document.getElementById('open-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const mobileMenuLinks = document.querySelectorAll('.mobile-menu-link');
+
+      function setMenuState(open) {
+        openMenuBtn.setAttribute('aria-expanded', String(open));
+        mobileMenu.classList.toggle('opacity-0', !open);
+        mobileMenu.classList.toggle('-translate-y-4', !open);
+        mobileMenu.classList.toggle('pointer-events-none', !open);
+      }
+      openMenuBtn.addEventListener('click', () => setMenuState(openMenuBtn.getAttribute('aria-expanded') === 'false'));
+      mobileMenuLinks.forEach(link => link.addEventListener('click', () => setMenuState(false)));
+
+      // --- Modal logic (sin cambios) ---
+      const modalContainer = document.getElementById('modal-container');
+      const modalDialog = document.getElementById('modal-dialog');
+      const modalContent = document.getElementById('modal-content');
+      const closeModalBtn = document.getElementById('close-modal-btn');
+      const modalTriggers = document.querySelectorAll('.modal-trigger');
+      const modalTemplates = document.getElementById('modal-templates');
+
+      function openModal(modalId) {
+        const template = modalTemplates.querySelector(`[data-modal="${modalId}"]`);
+        if (!template) return;
+        modalContent.innerHTML = template.innerHTML;
+        modalContainer.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        modalContainer.classList.remove('opacity-0', 'pointer-events-none');
+        modalDialog.classList.remove('scale-95');
+      }
+
+      function closeModal() {
+        modalContainer.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        modalContainer.classList.add('opacity-0');
+        modalDialog.classList.add('scale-95');
+        setTimeout(() => modalContainer.classList.add('pointer-events-none'), 300);
+      }
+      modalTriggers.forEach(trigger => {
+        trigger.addEventListener('click', (e) => { e.preventDefault(); openModal(trigger.getAttribute('href').substring(1)); });
+      });
+      closeModalBtn.addEventListener('click', closeModal);
+      modalContainer.addEventListener('click', (e) => { if (e.target === modalContainer) closeModal(); });
+      window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalContainer.getAttribute('aria-hidden') === 'false') closeModal(); });
+
+      // --- Formulario (sin cambios funcionales) ---
+      const form = document.getElementById('prelaunch-form');
+      const submitBtn = document.getElementById('submit-btn');
+      const formMessage = document.getElementById('form-message');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!db) {
+          formMessage.textContent = 'Error: El servicio no está disponible.';
+          formMessage.className = 'mt-4 text-sm text-red-400 h-5';
+          return;
+        }
+        submitBtn.disabled = true; /* Resto de la lógica del formulario... */
+      });
+
+      // --- Actualizar año en el footer ---
+      document.getElementById('year').textContent = new Date().getFullYear();
+    });
+  </script>
+  <style>
+  header {
+    transition: transform 0.3s ease-in-out;
+  }
+  header.hide {
+    transform: translateY(-100%);
+  }
+</style>
+
+<script>
+let lastScrollY = window.scrollY;
+let ticking = false;
+const header = document.querySelector("header");
+
+function updateHeader() {
+  const diff = window.scrollY - lastScrollY;
+
+  if (diff > 10 && window.scrollY > 50) {
+  
+    header.classList.add("hide");
+  } else if (diff < -10 || window.scrollY < 50) {
+    
+    header.classList.remove("hide");
+  }
+
+  lastScrollY = window.scrollY;
+  ticking = false;
+}
+
+window.addEventListener("scroll", () => {
+  if (!ticking) {
+    window.requestAnimationFrame(updateHeader);
+    ticking = true;
+  }
+});
+
+</script>
+
+</body>
+</html>
