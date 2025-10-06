@@ -1,95 +1,82 @@
 import { useState } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import SwipeCard from "@/components/SwipeCard";
 import ActionButton from "@/components/ActionButton";
 import MatchModal from "@/components/MatchModal";
 import { Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-import profile1 from '@assets/generated_images/Young_Cuban_woman_portrait_87eb5c89.png';
-import profile2 from '@assets/generated_images/Young_Cuban_man_portrait_c55b3471.png';
-import profile3 from '@assets/generated_images/Cuban_woman_Havana_portrait_cb4e6f84.png';
-import profile4 from '@assets/generated_images/Cuban_man_garden_portrait_3aaa4a1a.png';
-
-// TODO: Remove mock data - replace with real API calls
-const mockProfiles = [
-  {
-    id: '1',
-    name: "María",
-    age: 26,
-    bio: "Me encanta bailar salsa, cocinar y disfrutar de un buen mojito en la playa. Buscando alguien con quien compartir aventuras.",
-    distance: 3.5,
-    job: "Enfermera",
-    interests: ["Salsa", "Cocina", "Playa", "Música", "Viajes"],
-    imageUrl: profile1,
-    isVerified: true
-  },
-  {
-    id: '2',
-    name: "Carlos",
-    age: 28,
-    bio: "Ingeniero de software. Me gusta la música, el béisbol y conocer gente nueva. Fan de la comida cubana tradicional.",
-    distance: 5.2,
-    job: "Ingeniero",
-    interests: ["Tecnología", "Béisbol", "Música", "Cocina"],
-    imageUrl: profile2,
-    isVerified: true
-  },
-  {
-    id: '3',
-    name: "Ana",
-    age: 29,
-    bio: "Artista y diseñadora. Amo el arte, la cultura y las largas conversaciones sobre todo y nada.",
-    distance: 2.1,
-    job: "Diseñadora",
-    interests: ["Arte", "Diseño", "Fotografía", "Viajes", "Café"],
-    imageUrl: profile3,
-    isVerified: false
-  },
-  {
-    id: '4',
-    name: "Roberto",
-    age: 31,
-    bio: "Chef profesional apasionado por la fusión de sabores cubanos. Me encanta viajar y descubrir nuevos lugares.",
-    distance: 7.8,
-    job: "Chef",
-    interests: ["Cocina", "Viajes", "Vino", "Gastronomía"],
-    imageUrl: profile4,
-    isVerified: true
-  }
-];
+import { api } from "@/lib/api";
+import { queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function DiscoverPage() {
+  const { currentUser } = useAuth();
+  const { toast } = useToast();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showMatchModal, setShowMatchModal] = useState(false);
-  const [matchedUser, setMatchedUser] = useState<typeof mockProfiles[0] | null>(null);
+  const [matchedProfile, setMatchedProfile] = useState<any | null>(null);
 
-  const currentProfile = mockProfiles[currentIndex];
+  const { data: profiles, isLoading } = useQuery({
+    queryKey: ['/api/discovery'],
+    queryFn: () => api.getDiscoveryProfiles(20),
+  });
 
-  const handleSwipe = (direction: "left" | "right") => {
-    console.log(`Swiped ${direction} on ${currentProfile?.name}`);
+  const swipeMutation = useMutation({
+    mutationFn: (data: { swipedId: string; direction: 'left' | 'right' }) =>
+      api.createSwipe(data),
+    onSuccess: (data) => {
+      if (data.isMatch && data.match) {
+        setMatchedProfile(profiles?.[currentIndex]);
+        setShowMatchModal(true);
+      }
+      queryClient.invalidateQueries({ queryKey: ['/api/discovery'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/matches'] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "No se pudo procesar el swipe",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const currentProfile = profiles?.[currentIndex];
+
+  const handleSwipe = async (direction: "left" | "right") => {
+    if (!currentProfile) return;
+
+    await swipeMutation.mutateAsync({
+      swipedId: currentProfile.id,
+      direction,
+    });
     
-    // TODO: Remove mock - Simulate match on right swipe (33% chance)
-    if (direction === "right" && Math.random() > 0.66 && currentProfile) {
-      setMatchedUser(currentProfile);
-      setShowMatchModal(true);
-    }
-    
-    // Move to next profile
-    if (currentIndex < mockProfiles.length - 1) {
+    if (currentIndex < (profiles?.length || 0) - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      setCurrentIndex(0); // Loop back for demo
+      setCurrentIndex(0);
     }
   };
 
   const handleAction = (action: "nope" | "like" | "super") => {
-    console.log(`${action} button clicked`);
     if (action === "nope") {
       handleSwipe("left");
     } else {
       handleSwipe("right");
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 rounded-full border-4 border-primary border-t-transparent animate-spin mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Buscando perfiles...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!currentProfile) {
     return (
@@ -101,6 +88,21 @@ export default function DiscoverPage() {
       </div>
     );
   }
+
+  // Calculate age from birthdate
+  const calculateAge = (birthdate: Date) => {
+    const today = new Date();
+    const birth = new Date(birthdate);
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  const age = calculateAge(currentProfile.birthdate);
+  const photoUrl = currentProfile.photos?.[0]?.url || "https://images.unsplash.com/photo-1494790108377-be9c29b29330";
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -126,31 +128,39 @@ export default function DiscoverPage() {
         <SwipeCard
           key={currentProfile.id}
           name={currentProfile.name}
-          age={currentProfile.age}
-          bio={currentProfile.bio}
+          age={age}
+          bio={currentProfile.bio || ""}
           distance={currentProfile.distance}
-          job={currentProfile.job}
-          interests={currentProfile.interests}
-          imageUrl={currentProfile.imageUrl}
-          isVerified={currentProfile.isVerified}
+          job={currentProfile.jobTitle || ""}
+          interests={currentProfile.interests?.map((i: any) => i.name) || []}
+          imageUrl={photoUrl}
+          isVerified={currentProfile.isVerified || false}
           onSwipe={handleSwipe}
         />
       </div>
 
       <div className="flex justify-center gap-4 pb-24 px-6">
-        <ActionButton type="nope" onClick={() => handleAction("nope")} />
-        <ActionButton type="super" onClick={() => handleAction("super")} />
-        <ActionButton type="like" onClick={() => handleAction("like")} />
+        <ActionButton 
+          type="nope" 
+          onClick={() => !swipeMutation.isPending && handleAction("nope")}
+        />
+        <ActionButton 
+          type="super" 
+          onClick={() => !swipeMutation.isPending && handleAction("super")}
+        />
+        <ActionButton 
+          type="like" 
+          onClick={() => !swipeMutation.isPending && handleAction("like")}
+        />
       </div>
 
-      {showMatchModal && matchedUser && (
+      {showMatchModal && matchedProfile && (
         <MatchModal
-          user1Name="Tú"
-          user1Image={profile4}
-          user2Name={matchedUser.name}
-          user2Image={matchedUser.imageUrl}
+          user1Name={currentUser?.name || "Tú"}
+          user1Image={currentUser?.photos?.[0]?.url || ""}
+          user2Name={matchedProfile.name}
+          user2Image={matchedProfile.photos?.[0]?.url || ""}
           onMessage={() => {
-            console.log('Navigate to messages');
             setShowMatchModal(false);
           }}
           onClose={() => setShowMatchModal(false)}

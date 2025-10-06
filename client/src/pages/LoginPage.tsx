@@ -2,21 +2,60 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail } from "lucide-react";
+import { Mail, Loader2 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 interface LoginPageProps {
-  onLogin: () => void;
+  onSignUp: () => void;
 }
 
-export default function LoginPage({ onLogin }: LoginPageProps) {
+export default function LoginPage({ onSignUp }: LoginPageProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { signIn, signInWithGoogle } = useAuth();
+  const { toast } = useToast();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Login attempt:', { email, password });
-    // TODO: Remove mock - Replace with real Firebase authentication
-    onLogin();
+    setLoading(true);
+    
+    try {
+      await signIn(email, password);
+      toast({
+        title: "¡Bienvenido!",
+        description: "Has iniciado sesión correctamente",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "No se pudo iniciar sesión",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    
+    try {
+      await signInWithGoogle();
+      toast({
+        title: "¡Bienvenido!",
+        description: "Has iniciado sesión con Google",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "No se pudo iniciar sesión con Google",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -52,6 +91,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  disabled={loading}
                   data-testid="input-email"
                 />
               </div>
@@ -65,6 +105,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  disabled={loading}
                   data-testid="input-password"
                 />
               </div>
@@ -73,8 +114,10 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                 type="submit" 
                 className="w-full bg-gradient-to-r from-primary to-brand-gold hover:opacity-90"
                 size="lg"
+                disabled={loading}
                 data-testid="button-login"
               >
+                {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 Iniciar Sesión
               </Button>
             </form>
@@ -91,7 +134,8 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
             <Button 
               variant="outline" 
               className="w-full"
-              onClick={() => console.log('Google login')}
+              onClick={handleGoogleLogin}
+              disabled={loading}
               data-testid="button-google-login"
             >
               <Mail className="w-4 h-4 mr-2" />
@@ -102,7 +146,8 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
               ¿No tienes cuenta?{" "}
               <button 
                 className="text-primary hover:underline font-semibold"
-                onClick={() => console.log('Navigate to signup')}
+                onClick={onSignUp}
+                disabled={loading}
                 data-testid="link-signup"
               >
                 Regístrate gratis
